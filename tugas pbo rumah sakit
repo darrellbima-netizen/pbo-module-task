@@ -1,0 +1,246 @@
+//Nama: Darrell Bima Nusantara Perkasa
+//NIM: 252410102013
+
+using System;
+using System.Collections.Generic;
+
+//class: orang
+class Orang
+{
+    public string Nama { get; set; }
+    public int Umur { get; set; }
+
+    public Orang(string nama, int umur)
+    {
+        Nama = nama;
+        Umur = umur;
+    }
+
+    public virtual void Aktivitas()
+    {
+        Console.WriteLine($"[Orang] {Nama} sedang beraktivitas di rumah sakit.");
+    }
+
+    public void InfoOrang()
+    {
+        Console.WriteLine($"  Nama : {Nama}");
+        Console.WriteLine($"  Umur : {Umur} tahun");
+    }
+}
+
+
+//subclass: pasien (lanjutan dari orang)
+class Pasien : Orang
+{
+    public string Keluhan { get; set; }
+
+    public Pasien(string nama, int umur, string keluhan)
+        : base(nama, umur)
+    {
+        Keluhan = keluhan;
+    }
+
+    public void CekKeluhan()
+    {
+        Console.WriteLine($"[Pasien] {Nama} keluhan: {Keluhan}");
+    }
+
+    public override void Aktivitas()
+    {
+        Console.WriteLine($"[Pasien] {Nama} menunggu giliran untuk diperiksa.");
+    }
+}
+
+
+//subclass: TenagaMedis (lanjutan dari orang)
+class TenagaMedis : Orang
+{
+    public string Spesialisasi { get; set; }
+
+    public TenagaMedis(string nama, int umur, string spesialisasi)
+        : base(nama, umur)
+    {
+        Spesialisasi = spesialisasi;
+    }
+
+    public void CekSpesialis()
+    {
+        Console.WriteLine($"[TenagaMedis] {Nama} spesialisasi di bidang: {Spesialisasi}");
+    }
+
+    public override void Aktivitas()
+    {
+        Console.WriteLine($"[TenagaMedis] {Nama} masih bertugas di rumah sakit.");
+    }
+}
+
+//subclass: Dokter  (lanjutan dari TenagaMedis)
+class Dokter : TenagaMedis
+{
+    public Dokter(string nama, int umur, string spesialisasi)
+        : base(nama, umur, spesialisasi) { }
+
+    public void Diagnosa()
+    {
+        Console.WriteLine($"[Dokter] Dr. {Nama} sedang mendiagnosa pasien.");
+    }
+
+    public override void Aktivitas()
+    {
+        Console.WriteLine($"[Dokter] Dr. {Nama} sedang melakukan pemeriksaan dan diagnosa terhadap pasien.");
+    }
+}
+
+//subclass: Perawat  (lanjutan dari TenagaMedis)
+class Perawat : TenagaMedis
+{
+    public Perawat(string nama, int umur, string spesialisasi)
+        : base(nama, umur, spesialisasi) { }
+
+    public void CekPasien()
+    {
+        Console.WriteLine($"[Perawat] Perawat {Nama} mengecek kondisi pasien.");
+    }
+
+    public override void Aktivitas()
+    {
+        Console.WriteLine($"[Perawat] Perawat {Nama} merawat dan memantau pasien.");
+    }
+}
+
+//subclass: PasienAnak  (lanjutan dari Pasien)
+class PasienAnak : Pasien
+{
+    public PasienAnak(string nama, int umur, string keluhan)
+        : base(nama, umur, keluhan) { }
+
+    public void Menangis()
+    {
+        Console.WriteLine($"[PasienAnak] {Nama} menangis karena takut disuntik!");
+    }
+
+    public override void Aktivitas()
+    {
+        Console.WriteLine($"[PasienAnak] {Nama} sedang menggigil ketakutan sambil menunggu dokter.");
+    }
+}
+
+//subclass: PasienDewasa  (lanjutan dari Pasien)
+class PasienDewasa : Pasien
+{
+    public PasienDewasa(string nama, int umur, string keluhan)
+        : base(nama, umur, keluhan) { }
+
+    public void Konsultasi()
+    {
+        Console.WriteLine($"[PasienDewasa] {Nama} sedang berkonsultasi dengan dokter mengenai keluhannya.");
+    }
+
+    public override void Aktivitas()
+    {
+        Console.WriteLine($"[PasienDewasa] {Nama} sedang mengisi formulir dan menunggu antrian.");
+    }
+}
+
+//kelas: RumahSakit
+class RumahSakit
+{
+    private List<Orang> daftarOrang = new List<Orang>();
+
+    public void TambahOrang(Orang orang)
+    {
+        daftarOrang.Add(orang);
+        Console.WriteLine($"  >> {orang.Nama} berhasil ditambahkan ke rumah sakit.");
+    }
+
+    public void DaftarOrang()
+    {
+        Console.WriteLine($"\n  Total orang yang terdaftar: {daftarOrang.Count}");
+        Console.WriteLine("  " + new string('-', 40));
+        foreach (var o in daftarOrang)
+        {
+            Console.WriteLine($"\n  [{o.GetType().Name}]");
+            o.InfoOrang();
+        }
+    }
+
+    public List<Orang> GetDaftarOrang() => daftarOrang;
+}
+
+//PROGRAM UTAMAAA------------------------------------------------------------------------------------------------------
+class Program
+{
+    static void Separator(string judul)
+    {
+        Console.WriteLine("\n" + new string('=', 55));
+        Console.WriteLine($"  {judul}");
+        Console.WriteLine(new string('=', 55));
+    }
+
+    static void Main(string[] args)
+    {
+        //Buat objek rumah sakit
+        Separator("membuat objek rumah sakit");
+        RumahSakit rs = new RumahSakit();
+        Console.WriteLine("Rumah Sakit Super Sehat siap membantu");
+
+        //Buat beberapa objek orang
+        Separator("membuat objek orang");
+
+        Dokter dokter1 = new Dokter("Sugeng Riyadi", 45, "Kardiologi");
+        Dokter dokter2 = new Dokter("Bahlil Raharjodinata", 38, "Jantung");
+        Perawat perawat1 = new Perawat("Budi Mbud", 30, "Keperawatan Umum");
+        Pasien pasien1 = new Pasien("Parmun", 50, "Nyeri dada");
+        PasienAnak pasienAnak1 = new PasienAnak("Ahlul Mini", 8, "Demam tinggi");
+        PasienDewasa pasienDewasa1 = new PasienDewasa("Pardi Gwakomala", 35, "Sakit punggung");
+
+        Console.WriteLine("semua orang baik petugas bahkan pasien berhasil ditambahkan.");
+
+        //Tambahkan ke rumah sakit
+        Separator("menambahkan orang ke rumah sakit");
+        rs.TambahOrang(dokter1);
+        rs.TambahOrang(dokter2);
+        rs.TambahOrang(perawat1);
+        rs.TambahOrang(pasien1);
+        rs.TambahOrang(pasienAnak1);
+        rs.TambahOrang(pasienDewasa1);
+
+        //Tampilkan semua data yang sudah ada
+        Separator("daftar semua orang di rumah sakit");
+        rs.DaftarOrang();
+
+        //Demonstrasi dari polymorphism
+        Separator("contoh penerapan polymorphism");
+        Console.WriteLine("\n  command bagian ini akan memanggil aktivitas dari setiap objek melalui referensi Orang:\n");
+        foreach (Orang o in rs.GetDaftarOrang())
+        {
+            o.Aktivitas();
+        }
+
+        //Panggil method khusus/spesifik dari setiap class
+        Separator("buat memanggil hal khusus");
+
+        Console.WriteLine("\n  ---- CekKeluhan ----");
+        pasien1.CekKeluhan();
+        pasienAnak1.CekKeluhan();
+        pasienDewasa1.CekKeluhan();
+
+        Console.WriteLine("\n  ---- CekSpesialis ----");
+        dokter1.CekSpesialis();
+        perawat1.CekSpesialis();
+        dokter2.CekSpesialis();
+
+        Console.WriteLine("\n  ---- Diagnosa (Dokter) ----");
+        dokter1.Diagnosa();
+        dokter2.Aktivitas();
+
+        Console.WriteLine("\n  ---- CekPasien (Perawat) ----");
+        perawat1.CekPasien();
+
+        Console.WriteLine("\n  ---- Menangis (PasienAnak) ----");
+        pasienAnak1.Menangis();
+
+        Console.WriteLine("\n  ---- Konsultasi (PasienDewasa) ----");
+        pasienDewasa1.Konsultasi();
+    }
+}
